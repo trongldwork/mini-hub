@@ -244,6 +244,7 @@ app.get('/api/scores', async (req, res) => {
       }
 
       return {
+        id: s.id,
         rank: index + 1,
         playerName: s.player_name,
         score: s.score,
@@ -512,6 +513,32 @@ app.post('/api/admin/upload-game', adminAuth, upload.single('gameZip'), async (r
   } catch (error) {
     console.error('Error extracting/uploading game zip:', error);
     return res.status(500).json({ error: 'Internal server error while extracting/uploading build files.' });
+  }
+});
+
+// DELETE /api/admin/scores/:id: Remove a specific score
+app.delete('/api/admin/scores/:id', adminAuth, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const { error } = await supabase.from('scores').delete().eq('id', id);
+    if (error) throw error;
+    return res.json({ success: true, message: 'Score deleted successfully.' });
+  } catch (error) {
+    console.error("Database error in DELETE /api/admin/scores/:id:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// DELETE /api/admin/scores/game/:gameId: Clear leaderboard for a game
+app.delete('/api/admin/scores/game/:gameId', adminAuth, async (req, res) => {
+  const { gameId } = req.params;
+  try {
+    const { error } = await supabase.from('scores').delete().eq('game_id', gameId);
+    if (error) throw error;
+    return res.json({ success: true, message: `Leaderboard for '${gameId}' cleared successfully.` });
+  } catch (error) {
+    console.error("Database error in DELETE /api/admin/scores/game/:gameId:", error);
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 

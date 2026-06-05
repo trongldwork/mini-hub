@@ -567,6 +567,11 @@ function AdminPanel({ games, setGames }) {
   const [status, setStatus] = useState({ type: '', text: '' });
   const navigate = useNavigate();
 
+  // Admin Leaderboard State
+  const [selectedGameForLeaderboard, setSelectedGameForLeaderboard] = useState(null);
+  const [leaderboardScores, setLeaderboardScores] = useState([]);
+  const [lbLoading, setLbLoading] = useState(false);
+
   // Helper: build auth headers
   const authHeaders = () => ({ 'Authorization': `Bearer ${adminToken}` });
 
@@ -702,6 +707,61 @@ function AdminPanel({ games, setGames }) {
       }
     } catch (err) {
       setStatus({ type: 'error', text: 'Connection to server failed.' });
+    }
+  };
+
+  const handleOpenLeaderboard = async (game) => {
+    setSelectedGameForLeaderboard(game);
+    setLbLoading(true);
+    try {
+      const res = await fetch(`/api/scores?gameId=${game.id}&limit=50`);
+      if (res.ok) {
+        const data = await res.json();
+        setLeaderboardScores(data);
+      }
+    } catch(err) {
+      console.error(err);
+    } finally {
+      setLbLoading(false);
+    }
+  };
+
+  const handleDeleteScore = async (scoreId) => {
+    if (!window.confirm('Delete this score?')) return;
+    try {
+      const res = await fetch(`/api/admin/scores/${scoreId}`, {
+        method: 'DELETE',
+        headers: authHeaders()
+      });
+      if (res.status === 401) { handleLogoutAdmin(); return; }
+      if (res.ok) {
+        setLeaderboardScores(prev => prev.filter(s => s.id !== scoreId));
+      } else {
+        const data = await res.json();
+        setStatus({ type: 'error', text: data.error || 'Failed to delete score' });
+      }
+    } catch(err) {
+      console.error(err);
+    }
+  };
+
+  const handleClearLeaderboard = async (gameId) => {
+    if (!window.confirm('Clear all scores for this game?')) return;
+    try {
+      const res = await fetch(`/api/admin/scores/game/${gameId}`, {
+        method: 'DELETE',
+        headers: authHeaders()
+      });
+      if (res.status === 401) { handleLogoutAdmin(); return; }
+      if (res.ok) {
+        setLeaderboardScores([]);
+        setStatus({ type: 'success', text: 'Leaderboard cleared' });
+      } else {
+         const data = await res.json();
+         setStatus({ type: 'error', text: data.error || 'Failed to clear leaderboard' });
+      }
+    } catch(err) {
+      console.error(err);
     }
   };
 
@@ -846,19 +906,100 @@ function AdminPanel({ games, setGames }) {
                       </p>
                     </div>
                   </div>
-                  <button
-                    className="btn-control btn-control-danger"
-                    onClick={() => handleDelete(g.id)}
-                    style={{ padding: '0.5rem 1rem' }}
-                  >
-                    Delete
-                  </button>
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <button
+                      className="btn-control"
+                      onClick={() => handleOpenLeaderboard(g)}
+                      style={{ padding: '0.4rem 0.8rem' }}
+                    >
+                      Leaderboard
+                    </button>
+                    <button
+                      className="btn-control btn-control-danger"
+                      onClick={() => handleDelete(g.id)}
+                      style={{ padding: '0.4rem 0.8rem' }}
+                    >
+                      Delete Game
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
           )}
         </section>
+
       </div>
+
+      {/* Admin Leaderboard Modal */}
+      {selectedGameForLeaderboard && (
+        <div className="modal-overlay">
+          <div className="modal-content" style={{ maxWidth: '600px', width: '90%' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h2 className="modal-title" style={{ margin: 0 }}>
+                Leaderboard: {selectedGameForLeaderboard.name}
+              </h2>
+              <button 
+                className="btn-control" 
+                onClick={() => setSelectedGameForLeaderboard(null)}
+              >
+                Close
+              </button>
+            </div>
+            
+            {lbLoading ? (
+              <p>Loading scores...</p>
+            ) : leaderboardScores.length === 0 ? (
+              <p>No scores found.</p>
+            ) : (
+              <>
+                <div style={{ maxHeight: '400px', overflowY: 'auto', marginBottom: '1rem' }}>
+                  <table style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}>
+                    <thead>
+                      <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
+                        <th style={{ padding: '0.5rem' }}>Rank</th>
+                        <th style={{ padding: '0.5rem' }}>Player</th>
+                        <th style={{ padding: '0.5rem' }}>Score</th>
+                        <th style={{ padding: '0.5rem' }}>Date</th>
+                        <th style={{ padding: '0.5rem', textAlign: 'right' }}>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {leaderboardScores.map(score => (
+                        <tr key={score.id || Math.random()} style={{ borderBottom: '1px solid var(--color-border)' }}>
+                          <td style={{ padding: '0.5rem' }}>{score.rank}</td>
+                          <td style={{ padding: '0.5rem' }}>{score.playerName}</td>
+                          <td style={{ padding: '0.5rem', fontWeight: 'bold' }}>{score.score}</td>
+                          <td style={{ padding: '0.5rem' }}>{new Date(score.date).toLocaleDateString()}</td>
+                          <td style={{ padding: '0.5rem', textAlign: 'right' }}>
+                            {score.id && (
+                              <button 
+                                className="btn-control btn-control-danger" 
+                                style={{ padding: '0.2rem 0.5rem', fontSize: '0.8rem' }}
+                                onClick={() => handleDeleteScore(score.id)}
+                              >
+                                Delete
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div style={{ textAlign: 'right', marginTop: '1rem' }}>
+                  <button 
+                    className="btn-primary" 
+                    style={{ background: 'var(--color-primary)' }}
+                    onClick={() => handleClearLeaderboard(selectedGameForLeaderboard.id)}
+                  >
+                    Clear All Scores
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </main>
   );
 }

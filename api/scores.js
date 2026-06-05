@@ -138,6 +138,7 @@ export default async function handler(req, res) {
         }
 
         return {
+          id: s.id,
           rank: index + 1,
           playerName: s.player_name,
           score: s.score,

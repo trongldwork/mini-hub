@@ -8,6 +8,8 @@
     { "source": "/api/admin/verify", "destination": "/api/admin/verify.js" },
     { "source": "/api/admin/upload-game", "destination": "/api/admin/upload-game.js" },
     { "source": "/api/admin/games/:gameId", "destination": "/api/admin/delete-game.js?gameId=:gameId" },
+    { "source": "/api/admin/scores/:id", "destination": "/api/admin/delete-score.js?id=:id" },
+    { "source": "/api/admin/scores/game/:gameId", "destination": "/api/admin/clear-leaderboard.js?gameId=:gameId" },
     { "source": "/assets/(.*)", "destination": "/assets/$1" },
     { "source": "/games/(.*)", "destination": "/games/$1" },
     { "source": "/(.*)", "destination": "/index.html" }
