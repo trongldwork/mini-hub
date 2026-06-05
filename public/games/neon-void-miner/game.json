@@ -1,0 +1,10 @@
+{
+  "id": "neon-void-miner",
+  "name": "Neon Void Miner",
+  "description": "An idle clicker set in a cyberpunk universe. Click the singularity to extract Dark Matter, buy upgrades to automate production, and retire when ready to post your score.",
+  "version": "1.0.0",
+  "icon": "⚛️",
+  "color": "#E63946",
+  "scoreLabel": "Dark Matter",
+  "scoreDirection": "higher-is-better"
+}
