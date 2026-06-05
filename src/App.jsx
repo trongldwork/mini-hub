@@ -451,6 +451,10 @@ function GamePlay({ games, playerName }) {
           }
           break;
 
+        case 'GAME_EXIT':
+          navigate('/');
+          break;
+
         case 'GAME_RESTART':
           if (iframeRef.current) {
             setIframeLoaded(false);

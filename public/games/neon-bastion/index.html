@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Neon Bastion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Start Overlay -->
+  <div id="start-overlay" class="overlay active">
+    <div class="overlay-box">
+      <div class="overlay-icon">🏰</div>
+      <h2>Neon Bastion</h2>
+      <p class="overlay-sub">Tower Defense — 50 Waves — 5 Maps</p>
+      <button id="btn-start" class="btn-primary">▶ Start Game</button>
+    </div>
+  </div>
+
+  <!-- Map Transition Splash -->
+  <div id="map-splash" class="overlay hidden">
+    <div class="overlay-box splash-box">
+      <span class="splash-label">NEW SECTOR</span>
+      <h2 id="splash-map-name">—</h2>
+      <p id="splash-map-waves">Waves 1–10</p>
+    </div>
+  </div>
+
+  <!-- Game Over Overlay -->
+  <div id="gameover-overlay" class="overlay hidden">
+    <div class="overlay-box">
+      <div class="overlay-icon">💀</div>
+      <h2>Game Over</h2>
+      <p class="overlay-sub">You reached <strong>Wave <span id="go-wave">0</span></strong></p>
+      <div class="overlay-actions">
+        <button id="btn-go-submit" class="btn-primary">🏆 Submit &amp; Exit</button>
+        <button id="btn-go-retry" class="btn-secondary">↩ Play Again</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Victory Overlay -->
+  <div id="victory-overlay" class="overlay hidden">
+    <div class="overlay-box victory-box">
+      <div class="overlay-icon">🎉</div>
+      <h2>Victory!</h2>
+      <p class="overlay-sub">You survived all 50 waves!</p>
+      <div class="overlay-actions">
+        <button id="btn-vic-submit" class="btn-primary">🏆 Submit &amp; Exit</button>
+        <button id="btn-vic-retry" class="btn-secondary">↩ Play Again</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Help Modal -->
+  <div id="help-modal" class="overlay hidden">
+    <div class="overlay-box help-box">
+      <button id="btn-help-close" class="help-close">✕</button>
+      <div class="help-tabs">
+        <button class="help-tab active" data-tab="0">Objective</button>
+        <button class="help-tab" data-tab="1">Controls</button>
+        <button class="help-tab" data-tab="2">Towers</button>
+        <button class="help-tab" data-tab="3">Tips</button>
+      </div>
+      <div class="help-panels">
+        <div class="help-panel active" data-panel="0">
+          <h3>🎯 Objective</h3>
+          <p>Enemies march along the neon path toward the exit. Place towers on empty tiles to destroy them before they escape.</p>
+          <p>You start with <strong>20 lives</strong> — each enemy that reaches the exit costs 1 life. Survive all <strong>50 waves</strong> to win!</p>
+          <p>The map changes every 10 waves, and buildable tiles shift each wave — adapt your strategy!</p>
+        </div>
+        <div class="help-panel" data-panel="1">
+          <h3>🕹️ Controls</h3>
+          <ul>
+            <li><strong>Select a tower</strong> from the bar at the bottom</li>
+            <li><strong>Click an empty tile</strong> to place it (costs gold)</li>
+            <li><strong>Click an existing tower</strong> to upgrade or sell it</li>
+            <li><strong>Right-click or Escape</strong> to cancel placement</li>
+            <li><strong>Spacebar</strong> or ▶ button to send next wave early</li>
+          </ul>
+        </div>
+        <div class="help-panel" data-panel="2">
+          <h3>🗼 Towers</h3>
+          <div class="help-tower-list">
+            <div class="help-tower"><span class="ht-icon blaster-icon"></span><strong>Blaster</strong> — 50g — Fast single-target damage</div>
+            <div class="help-tower"><span class="ht-icon frost-icon"></span><strong>Frost Beam</strong> — 75g — Slows enemies by 40%</div>
+            <div class="help-tower"><span class="ht-icon plasma-icon"></span><strong>Plasma Cannon</strong> — 150g — Area splash damage</div>
+            <div class="help-tower"><span class="ht-icon sniper-icon"></span><strong>Sniper Turret</strong> — 200g — Long range, high damage</div>
+            <div class="help-tower"><span class="ht-icon tesla-icon"></span><strong>Tesla Coil</strong> — 300g — Chain-hits 3 enemies</div>
+          </div>
+          <p class="help-note">Each tower can be upgraded 3 times for +50% damage per level.</p>
+        </div>
+        <div class="help-panel" data-panel="3">
+          <h3>💡 Tips</h3>
+          <ul>
+            <li>Frost Beams at chokepoints slow enemies for your damage dealers.</li>
+            <li>Save gold for boss waves (every 10th wave).</li>
+            <li>Sell underperforming towers — you get 60% gold back.</li>
+            <li>Upgrade existing towers before spamming new ones.</li>
+            <li>Build spots shift each wave. Displaced towers are refunded 100%.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tower Action Panel (upgrade/sell) -->
+  <div id="tower-action" class="tower-action hidden">
+    <div class="ta-name" id="ta-name">Blaster Lv1</div>
+    <div class="ta-stats" id="ta-stats">DMG: 10 | RNG: 3</div>
+    <div class="ta-buttons">
+      <button id="btn-upgrade" class="btn-ta">⬆ Upgrade (<span id="ta-upgrade-cost">30</span>g)</button>
+      <button id="btn-sell" class="btn-ta btn-sell">🗑 Sell (<span id="ta-sell-value">30</span>g)</button>
+    </div>
+  </div>
+
+  <!-- HUD -->
+  <header class="hud">
+    <div class="hud-group">
+      <div class="hud-item">
+        <span class="hud-label">WAVE</span>
+        <span class="hud-val" id="hud-wave">0 / 50</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">LIVES</span>
+        <span class="hud-val" id="hud-lives">20</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">GOLD</span>
+        <span class="hud-val gold" id="hud-gold">200</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">MAP</span>
+        <span class="hud-val map-name" id="hud-map">Neon Grid</span>
+      </div>
+    </div>
+    <div class="hud-right">
+      <button id="btn-next-wave" class="btn-wave" title="Send next wave">▶ Next Wave</button>
+      <button id="btn-help" class="btn-help" title="How to play">?</button>
+    </div>
+  </header>
+
+  <!-- Game Canvas -->
+  <canvas id="game-canvas"></canvas>
+
+  <!-- Tower Selection Bar -->
+  <footer class="tower-bar">
+    <button class="tower-btn" data-tower="blaster" title="Blaster — 50g">
+      <span class="tb-preview blaster-icon"></span>
+      <span class="tb-name">Blaster</span>
+      <span class="tb-cost">50g</span>
+    </button>
+    <button class="tower-btn" data-tower="frost" title="Frost Beam — 75g">
+      <span class="tb-preview frost-icon"></span>
+      <span class="tb-name">Frost</span>
+      <span class="tb-cost">75g</span>
+    </button>
+    <button class="tower-btn" data-tower="plasma" title="Plasma Cannon — 150g">
+      <span class="tb-preview plasma-icon"></span>
+      <span class="tb-name">Plasma</span>
+      <span class="tb-cost">150g</span>
+    </button>
+    <button class="tower-btn" data-tower="sniper" title="Sniper — 200g">
+      <span class="tb-preview sniper-icon"></span>
+      <span class="tb-name">Sniper</span>
+      <span class="tb-cost">200g</span>
+    </button>
+    <button class="tower-btn" data-tower="tesla" title="Tesla Coil — 300g">
+      <span class="tb-preview tesla-icon"></span>
+      <span class="tb-name">Tesla</span>
+      <span class="tb-cost">300g</span>
+    </button>
+  </footer>
+
+  <script src="game.js"></script>
+</body>
+</html>
