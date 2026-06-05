@@ -1,0 +1,10 @@
+{
+  "id": "snake",
+  "name": "Snake",
+  "description": "Feed your snake and grow as long as possible. Avoid walls and your own tail!",
+  "version": "1.0.0",
+  "icon": "🐍",
+  "color": "#f1c40f",
+  "scoreLabel": "Points",
+  "scoreDirection": "higher-is-better"
+}

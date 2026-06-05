@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Minesweeper</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="game-container">
+    <div class="stats-header">
+      <div class="stat-box">
+        <span class="stat-label">Player</span>
+        <span id="player-name" class="stat-value">Anonymous</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-label">Time</span>
+        <span id="timer" class="stat-value">0s</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-label">Mines</span>
+        <span id="mines-count" class="stat-value">10</span>
+      </div>
+    </div>
+
+    <div class="board-wrapper">
+      <div id="board" class="board"></div>
+    </div>
+
+    <div class="control-row">
+      <button id="btn-flag-mode" class="btn-tool">
+        Mode: ⛏️ Dig
+      </button>
+      <button id="btn-restart" class="btn-tool btn-restart">
+        Reset
+      </button>
+    </div>
+
+    <div id="game-status" class="status-banner"></div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>

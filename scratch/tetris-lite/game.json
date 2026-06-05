@@ -1,0 +1,9 @@
+{
+  "id": "tetris-lite",
+  "name": "Tetris Lite",
+  "description": "A lightweight Tetris clone with premium visual elements.",
+  "icon": "🧱",
+  "color": "#e63946",
+  "scoreLabel": "Points",
+  "scoreDirection": "higher-is-better"
+}

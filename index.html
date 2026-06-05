@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mini Hub — Gaming Arena</title>
+    <meta name="description" content="A modular gaming hub inspired by LG design. Play Minesweeper, Dino Runner, Snake and more." />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Prevent flash of wrong theme by reading localStorage synchronously -->
+    <script>
+      (function() {
+        var theme = localStorage.getItem('minihub-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+    <style>
+      /* Quick reset to avoid flash of unstyled content */
+      body {
+        margin: 0;
+        background-color: #0F0F0F;
+        color: #F5F5F5;
+        font-family: 'Poppins', system-ui, sans-serif;
+      }
+      [data-theme="light"] body {
+        background-color: #F7F7F7;
+        color: #121212;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+

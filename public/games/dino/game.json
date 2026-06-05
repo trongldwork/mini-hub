@@ -1,0 +1,10 @@
+{
+  "id": "dino",
+  "name": "Dino Runner",
+  "description": "Jump over obstacles in this classic endless runner. Survive as long as you can!",
+  "version": "1.0.0",
+  "icon": "🦖",
+  "color": "#4ade80",
+  "scoreLabel": "Meters",
+  "scoreDirection": "higher-is-better"
+}

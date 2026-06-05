@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tetris Lite</title>
+    <style>
+        body {
+            background: #121212;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: sans-serif;
+            text-align: center;
+        }
+        h1 { color: #A50034; }
+        button {
+            background: #A50034;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>🧱 Tetris Lite</h1>
+        <p>Player: <span id="player-name"></span></p>
+        <button id="score-btn">Simulate Score 500</button>
+    </div>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        document.getElementById('player-name').innerText = urlParams.get('player') || 'Anonymous';
+        
+        window.parent.postMessage({ type: 'GAME_READY' }, '*');
+        
+        document.getElementById('score-btn').addEventListener('click', () => {
+            window.parent.postMessage({ type: 'GAME_OVER', score: 500 }, '*');
+        });
+    </script>
+</body>
+</html>

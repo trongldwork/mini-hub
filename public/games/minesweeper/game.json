@@ -1,0 +1,10 @@
+{
+  "id": "minesweeper",
+  "name": "Minesweeper",
+  "description": "Clear the grid without detonating any mines. Faster time is better!",
+  "version": "1.0.0",
+  "icon": "💣",
+  "color": "#E63946",
+  "scoreLabel": "Seconds",
+  "scoreDirection": "lower-is-better"
+}

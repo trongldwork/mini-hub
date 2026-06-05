@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Tetris Lite</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #121212;
+      color: #F1FAEE;
+      font-family: 'Inter', system-ui, sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .game-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #1a1a1a;
+      border: 2px solid #2a2a2a;
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      position: relative;
+      max-width: 95%;
+    }
+
+    .game-layout {
+      display: flex;
+      gap: 15px;
+    }
+
+    .canvas-container {
+      border: 2px solid #333;
+      background-color: #111;
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    canvas {
+      display: block;
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      width: 120px;
+      gap: 12px;
+    }
+
+    .info-card {
+      background-color: #222;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 8px;
+      text-align: center;
+    }
+
+    .info-label {
+      font-size: 0.65rem;
+      color: #A0A0A0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 3px;
+    }
+
+    .info-val {
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+
+    .next-container {
+      aspect-ratio: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #111;
+      border-radius: 6px;
+      border: 1px solid #333;
+      padding: 5px;
+    }
+
+    #player-name {
+      color: #e63946;
+      font-weight: 700;
+      word-break: break-all;
+    }
+
+    /* Controls overlay for mobile/touch screens */
+    .controls-overlay {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      margin-top: 15px;
+      gap: 8px;
+    }
+
+    .control-row {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn-ctrl {
+      flex: 1;
+      max-width: 75px;
+      background-color: #2d2d2d;
+      color: #F1FAEE;
+      border: 1px solid #3d3d3d;
+      border-radius: 8px;
+      padding: 10px 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background-color 0.1s;
+    }
+
+    .btn-ctrl:active {
+      background-color: #e63946;
+      color: #121212;
+    }
+
+    .btn-wide {
+      max-width: 160px;
+    }
+
+    /* Menu / Game Over overlay */
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.9);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+      border-radius: 10px;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .overlay.hidden {
+      display: none;
+    }
+
+    .title {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #e63946;
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: #A0A0A0;
+      margin-bottom: 20px;
+    }
+
+    .score-summary {
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+    }
+
+    .btn-start {
+      background-color: #e63946;
+      color: #F1FAEE;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 25px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(230, 57, 70, 0.4);
+      transition: background-color 0.2s, transform 0.1s;
+    }
+
+    .btn-start:hover {
+      background-color: #ff4d5a;
+    }
+
+    .btn-start:active {
+      transform: scale(0.95);
+    }
+
+    /* Hide virtual keyboard on desktop */
+    @media (min-width: 768px) {
+      .controls-overlay {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <div class="game-layout">
+      <!-- Main Game Canvas -->
+      <div class="canvas-container">
+        <canvas id="tetrisCanvas" width="240" height="480"></canvas>
+      </div>
+
+      <!-- Info/Stats Sidebar -->
+      <div class="sidebar">
+        <div class="info-card">
+          <div class="info-label">Player</div>
+          <div class="info-val" id="player-name">Anonymous</div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-label">Next</div>
+          <div class="next-container">
+            <canvas id="nextCanvas" width="80" height="80"></canvas>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-label">Score</div>
+          <div class="info-val" id="score-val">0</div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-label">Level</div>
+          <div class="info-val" id="level-val">1</div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-label">Lines</div>
+          <div class="info-val" id="lines-val">0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Touch Controls Overlay -->
+    <div class="controls-overlay">
+      <div class="control-row">
+        <button class="btn-ctrl" id="btn-rot">↻</button>
+        <button class="btn-ctrl" id="btn-left">←</button>
+        <button class="btn-ctrl" id="btn-right">→</button>
+      </div>
+      <div class="control-row">
+        <button class="btn-ctrl btn-wide" id="btn-down">Soft Drop</button>
+        <button class="btn-ctrl btn-wide" id="btn-drop">Hard Drop</button>
+      </div>
+    </div>
+
+    <!-- Menu / Game Over Screen Overlay -->
+    <div id="overlay" class="overlay">
+      <div id="game-title" class="title">TETRIS LITE</div>
+      <div id="game-subtitle" class="subtitle">Use Arrow keys or Buttons to play</div>
+      <div id="score-display" class="score-summary" style="display: none;">
+        Score: <span id="final-score" style="color: #e63946;">0</span> pts
+      </div>
+      <button id="btn-action" class="btn-start">START GAME</button>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>

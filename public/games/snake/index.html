@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Snake</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #121212;
+      color: #F1FAEE;
+      font-family: 'Inter', system-ui, sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    
+    .game-container {
+      position: relative;
+      width: 380px;
+      max-width: 100%;
+      background-color: #1a1a1a;
+      border: 2px solid #2a2a2a;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 15px;
+    }
+
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+      color: #A0A0A0;
+      font-weight: 600;
+    }
+
+    .score-box {
+      font-weight: 800;
+      color: #f1c40f;
+    }
+    
+    canvas {
+      display: block;
+      background-color: #0c0c0c;
+      border-radius: 6px;
+      border: 1px solid #222;
+      width: 100%;
+      max-width: 350px;
+      aspect-ratio: 1;
+    }
+    
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.85);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+      text-align: center;
+      padding: 20px;
+      transition: opacity 0.3s;
+    }
+    
+    .overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    
+    .title {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #f1c40f;
+      margin-bottom: 5px;
+      letter-spacing: -0.5px;
+    }
+    
+    .subtitle {
+      font-size: 0.85rem;
+      color: #A0A0A0;
+      margin-bottom: 25px;
+      max-width: 250px;
+      line-height: 1.4;
+    }
+    
+    .score-summary {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+    
+    .btn-play {
+      background-color: #f1c40f;
+      color: #121212;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 25px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(241, 196, 15, 0.3);
+      transition: background-color 0.2s, transform 0.1s;
+    }
+    
+    .btn-play:hover {
+      background-color: #f39c12;
+    }
+    
+    .btn-play:active {
+      transform: scale(0.95);
+    }
+    
+    /* Touch Controls D-Pad */
+    .dpad-container {
+      display: grid;
+      grid-template-columns: repeat(3, 50px);
+      grid-template-rows: repeat(3, 50px);
+      gap: 5px;
+      margin-top: 15px;
+      width: 160px;
+    }
+
+    .dpad-btn {
+      background-color: #2D2D2D;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      color: #F1FAEE;
+      font-size: 1.2rem;
+      font-weight: 800;
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.1s;
+    }
+
+    .dpad-btn:active {
+      background-color: #f1c40f;
+      color: #121212;
+    }
+
+    .dpad-btn.empty {
+      background-color: transparent;
+      border: none;
+      cursor: default;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container" id="game-wrapper">
+    <div class="header-bar">
+      <span>Player: <span id="player-display" style="color: #F1FAEE;">Guest</span></span>
+      <span>Score: <span id="score-display" class="score-box">0</span></span>
+    </div>
+
+    <canvas id="gameCanvas" width="300" height="300"></canvas>
+
+    <!-- Touch Controls for Mobile -->
+    <div class="dpad-container">
+      <div class="dpad-btn empty"></div>
+      <button class="dpad-btn" id="dpad-up">▲</button>
+      <div class="dpad-btn empty"></div>
+      <button class="dpad-btn" id="dpad-left">◀</button>
+      <div class="dpad-btn empty"></div>
+      <button class="dpad-btn" id="dpad-right">▶</button>
+      <div class="dpad-btn empty"></div>
+      <button class="dpad-btn" id="dpad-down">▼</button>
+      <div class="dpad-btn empty"></div>
+    </div>
+    
+    <!-- Start / Game Over Overlay -->
+    <div id="overlay" class="overlay">
+      <div id="game-title" class="title">SNAKE</div>
+      <div id="game-subtitle" class="subtitle">Use WASD, Arrow keys, or the Touch D-Pad to move</div>
+      <div id="final-score-container" class="score-summary" style="display: none;">
+        Score: <span id="final-score" style="color: #f1c40f;">0</span> pts
+      </div>
+      <button id="btn-action" class="btn-play">START GAME</button>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>

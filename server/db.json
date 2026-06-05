@@ -1,0 +1,48 @@
+{
+  "players": [
+    {
+      "id": 1,
+      "name": "Gamer1",
+      "created_at": "2026-06-05T04:02:12.407Z"
+    },
+    {
+      "id": 2,
+      "name": "uyui",
+      "created_at": "2026-06-05T04:08:31.937Z"
+    }
+  ],
+  "scores": [
+    {
+      "id": 1,
+      "game_id": "snake",
+      "player_name": "Gamer1",
+      "score": 0,
+      "metadata": "{\"snakeLength\":3,\"durationSeconds\":0}",
+      "created_at": "2026-06-05T04:02:44.162Z"
+    },
+    {
+      "id": 2,
+      "game_id": "snake",
+      "player_name": "Gamer1",
+      "score": 50,
+      "metadata": "{\"snakeLength\":8,\"durationSeconds\":10}",
+      "created_at": "2026-06-05T04:03:18.616Z"
+    },
+    {
+      "id": 3,
+      "game_id": "minesweeper",
+      "player_name": "Gamer1",
+      "score": 24,
+      "metadata": "{\"gridSize\":\"9x9\",\"mines\":10,\"durationSeconds\":24}",
+      "created_at": "2026-06-05T04:03:55.713Z"
+    },
+    {
+      "id": 4,
+      "game_id": "dino",
+      "player_name": "Gamer1",
+      "score": 218,
+      "metadata": "{\"speedReached\":7.45,\"durationSeconds\":21}",
+      "created_at": "2026-06-05T04:04:50.431Z"
+    }
+  ]
+}
