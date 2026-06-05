@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Sudoku</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Start Overlay -->
+  <div id="start-overlay" class="overlay active">
+    <h2>Select Difficulty</h2>
+    <div class="difficulty-buttons">
+      <button data-difficulty="easy">Easy</button>
+      <button data-difficulty="medium">Medium</button>
+      <button data-difficulty="hard">Hard</button>
+    </div>
+  </div>
+
+  <!-- Game Over Overlay -->
+  <div id="game-over-overlay" class="overlay hidden">
+    <h2>Victory!</h2>
+    <div class="stats">
+      <p>Time: <span id="final-time">00:00</span></p>
+      <p>Hints Used: <span id="final-hints">0</span> (+<span id="final-penalty">0</span>s penalty)</p>
+      <p>Final Score: <span id="final-score">0</span>s</p>
+    </div>
+  </div>
+
+  <div class="game-container">
+    <header>
+      <div class="player-info">Player: <span id="player-name">Anonymous</span></div>
+      <div class="timer">Time: <span id="time-display">00:00</span></div>
+    </header>
+
+    <div id="sudoku-board" class="board">
+      <!-- 81 cells will be generated here -->
+    </div>
+
+    <div class="controls">
+      <button id="btn-check">Check</button>
+      <button id="btn-hint">Hint (+30s)</button>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>

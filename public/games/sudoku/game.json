@@ -1,0 +1,10 @@
+{
+  "id": "sudoku",
+  "name": "Sudoku",
+  "description": "A classic 9x9 Sudoku puzzle game with difficulty selection and hints.",
+  "version": "1.0.0",
+  "icon": "🔢",
+  "color": "#E63946",
+  "scoreLabel": "Seconds",
+  "scoreDirection": "lower-is-better"
+}
