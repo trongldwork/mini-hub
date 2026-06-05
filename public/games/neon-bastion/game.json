@@ -1,0 +1,10 @@
+{
+  "id": "neon-bastion",
+  "name": "Neon Bastion",
+  "description": "A cyberpunk tower defense game with 5 dynamic maps and 50 waves of enemies. Place towers, adapt to shifting terrain, and survive the onslaught.",
+  "version": "1.0.0",
+  "icon": "🏰",
+  "color": "#E63946",
+  "scoreLabel": "Wave",
+  "scoreDirection": "higher-is-better"
+}
